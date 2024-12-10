@@ -109,7 +109,7 @@ onMounted(async () => {
             <Segmented v-model="curWeek" :options="optionsBasis" />
           </div>
           <div class="flex justify-between items-start mt-3">
-            <ChartBar :requireData="barChart[curWeek].requireData" />
+            <ChartBar :requireData="barChart[curWeek]?.requireData" />
           </div>
         </el-card>
       </re-col>

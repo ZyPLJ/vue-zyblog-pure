@@ -1,7 +1,10 @@
 import { http } from "@/utils/http";
+import { baseUrlApi } from "./utils";
 
 export type UserResult = {
   success: boolean;
+  message: string;
+  statusCode: number;
   data: {
     /** 头像 */
     avatar: string;
@@ -36,7 +39,9 @@ export type RefreshTokenResult = {
 
 /** 登录 */
 export const getLogin = (data?: object) => {
-  return http.request<UserResult>("post", "/login", { data });
+  return http.request<UserResult>("post", baseUrlApi("Auth/LoginNew"), {
+    data
+  });
 };
 
 /** 刷新`token` */

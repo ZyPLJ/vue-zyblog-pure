@@ -20,6 +20,7 @@ import User from "@iconify-icons/ri/user-3-fill";
 
 import { setToken } from "@/utils/auth";
 import { usePermissionStoreHook } from "@/store/modules/permission";
+import { getLogin } from "@/api/user";
 
 defineOptions({
   name: "Login"
@@ -42,18 +43,23 @@ const ruleForm = reactive({
 
 const onLogin = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
-  await formEl.validate(valid => {
+  await formEl.validate(async valid => {
     if (valid) {
       loading.value = true;
+      const { username, password } = ruleForm;
+      const data = await getLogin({ username, password });
+      if (data.statusCode !== 200) {
+        message(`登录失败${data.message}`, { type: "error" });
+      }
       setToken({
-        username: "admin",
+        username: username,
         roles: ["admin"],
-        accessToken: "eyJhbGciOiJIUzUxMiJ9.admin"
+        accessToken: data.data.accessToken
       } as any);
       // 全部采取静态路由模式
       usePermissionStoreHook().handleWholeMenus([]);
       addPathMatch();
-      router.push(getTopMenu(true).path);
+      await router.push(getTopMenu(true).path);
       message("登录成功", { type: "success" });
       loading.value = false;
     }
