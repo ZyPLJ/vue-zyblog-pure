@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@iconify-icons/ant-design':
+        specifier: ^1.2.7
+        version: 1.2.7
       '@pureadmin/descriptions':
         specifier: ^1.2.1
         version: 1.2.1(echarts@5.5.1)(element-plus@2.8.0(vue@3.4.38(typescript@5.5.4)))(typescript@5.5.4)
@@ -841,6 +844,9 @@ packages:
   '@humanwhocodes/retry@0.3.0':
     resolution: {integrity: sha512-d2CGZR2o7fS6sWB7DG/3a95bGKQyHMACZ5aW8qGkkqQpUoZV6C0X7Pc7l4ZNMZkfNBf4VWNe9E1jRsf0G146Ew==}
     engines: {node: '>=18.18'}
+
+  '@iconify-icons/ant-design@1.2.7':
+    resolution: {integrity: sha512-PEQPQMX0TiSGTyUqBv7c3f+bzQqDSpsEwSSh0XFjDd6SnVjE0AoZTl2NYEUADsbTgnPXAH9YM9AF4GdtkiyJ2Q==}
 
   '@iconify-icons/ep@1.2.12':
     resolution: {integrity: sha512-8EJULn048sQq3fvytpQ5j40omnVOdBKpo+sXdYM35NRrqCe1BihxBesMcCOLWaocqkWia6uTQ3cnRHff4ZA11w==}
@@ -4433,6 +4439,10 @@ snapshots:
   '@humanwhocodes/module-importer@1.0.1': {}
 
   '@humanwhocodes/retry@0.3.0': {}
+
+  '@iconify-icons/ant-design@1.2.7':
+    dependencies:
+      '@iconify/types': 2.0.0
 
   '@iconify-icons/ep@1.2.12':
     dependencies:

@@ -48,6 +48,7 @@
     "url": "https://github.com/xiaoxian521"
   },
   "dependencies": {
+    "@iconify-icons/ant-design": "^1.2.7",
     "@pureadmin/descriptions": "^1.2.1",
     "@pureadmin/table": "^3.2.0",
     "@pureadmin/utils": "^2.4.8",

@@ -1,24 +1,50 @@
 import type { PaginationProps } from "@pureadmin/table";
-import { type Ref, reactive, ref, onMounted } from "vue";
-import { getCategoryList, setFeatured } from "@/api/categroy";
+import { reactive, ref, onMounted, computed } from "vue";
+import {
+  getCategoryList,
+  setFeatured,
+  CancelFeatured,
+  deleteCategory,
+  updateCategory,
+  setVisible,
+  setInvisible
+} from "@/api/categroy";
 import { addDialog } from "@/components/ReDialog";
 import { message } from "@/utils/message";
 import forms, { type FormProps } from "./form.vue";
+import EditPen from "@iconify-icons/ep/edit-pen";
+import Check from "@iconify-icons/ep/check";
 
-export function useRole(tableRef: Ref) {
-  const form = reactive({
-    module: "",
-    requestTime: ""
-  });
+export function useRole() {
   const dataList = ref([]);
   const loading = ref(true);
-  const selectedNum = ref(0);
 
-  const pagination = reactive<PaginationProps>({
+  const paginations = reactive<PaginationProps>({
     total: 0,
     pageSize: 10,
     currentPage: 1,
     background: true
+  });
+
+  const editMap = ref({});
+  const activeIndex = ref(-1);
+  const editing = computed(() => {
+    return index => {
+      return editMap.value[index]?.editing;
+    };
+  });
+  const iconClass = computed(() => {
+    return (index, other = false) => {
+      return [
+        "cursor-pointer",
+        "ml-2",
+        "transition",
+        "delay-100",
+        other
+          ? ["hover:scale-110", "hover:text-red-500"]
+          : editing.value(index) && ["scale-150", "text-red-500"]
+      ];
+    };
   });
 
   const columns: TableColumnList = [
@@ -28,9 +54,34 @@ export function useRole(tableRef: Ref) {
       minWidth: 90
     },
     {
-      label: "名称",
+      label: "名称(可修改)",
       prop: "name",
-      minWidth: 100
+      cellRenderer: ({ row, index }) => (
+        <div
+          class="flex-bc w-full h-[32px]"
+          onMouseenter={() => (activeIndex.value = index)}
+          onMouseleave={() => onMouseleave(index)}
+        >
+          {!editing.value(index) ? (
+            <p>{row.name}</p>
+          ) : (
+            <>
+              <el-input v-model={row.name} />
+              <iconify-icon-offline
+                icon={Check}
+                class={iconClass.value(index)}
+                onClick={() => onSave(index)}
+              />
+            </>
+          )}
+          <iconify-icon-offline
+            v-show={activeIndex.value === index && !editing.value(index)}
+            icon={EditPen}
+            class={iconClass.value(index, true)}
+            onClick={() => onEdit(row, index)}
+          />
+        </div>
+      )
     },
     {
       label: "层级",
@@ -68,20 +119,32 @@ export function useRole(tableRef: Ref) {
       slot: "operation"
     }
   ];
+  /** 名称列修改保存触发 */
+  function onSave(index: number) {
+    const { name } = dataList.value[index];
+    const { id } = dataList.value[index];
+    updateCategory(id, { name }).then(() => {
+      message(`修改成功`, { type: "success" });
+    });
+    editMap.value[index].editing = false;
+  }
+  function onEdit(row: any, index: number) {
+    editMap.value[index] = Object.assign({ ...row, editing: true });
+  }
+  function onMouseleave(index: number) {
+    editing.value[index]
+      ? (activeIndex.value = index)
+      : (activeIndex.value = -1);
+  }
 
   function handleSizeChange(val: number) {
-    console.log(`${val} items per page`);
+    paginations.pageSize = val;
+    onSearch();
   }
 
   function handleCurrentChange(val: number) {
-    console.log(`current page: ${val}`);
-  }
-
-  /** 当CheckBox选择项发生变化时会触发该事件 */
-  function handleSelectionChange(val) {
-    selectedNum.value = val.length;
-    // 重置表格高度
-    tableRef.value.setAdaptive();
+    paginations.currentPage = val;
+    onSearch();
   }
 
   /** 设置推荐 */
@@ -119,46 +182,76 @@ export function useRole(tableRef: Ref) {
     });
   }
   /** 取消推荐 */
-  // function onCancelFeatured(row: any) {
-  //   console.log(row);
-  // }
-  /** 删除 */
-  function onDeleted(row: any) {
-    console.log(row);
+  function onCancelFeatured(row: any) {
+    CancelFeatured(row).then(() => {
+      message(`取消推荐成功`, { type: "success" });
+      onSearch();
+    });
   }
-
+  /** 删除 */
+  async function onDeleted(row: any) {
+    try {
+      const res = await deleteCategory(row);
+      if (res.successful) {
+        message(`删除成功`, { type: "success" });
+      } else {
+        message(res.message, { type: "error" });
+      }
+    } catch (e) {
+      if (e.response) {
+        message(e.response.data.message, { type: "error" });
+      } else {
+        message(e.message, { type: "error" });
+      }
+    } finally {
+      onSearch();
+    }
+  }
+  /** 查询 */
   async function onSearch() {
     loading.value = true;
-    const { data } = await getCategoryList();
+    let req = {
+      pageSize: paginations.pageSize,
+      page: paginations.currentPage,
+      search: ""
+    };
+    const { data, pagination } = await getCategoryList(req);
+    paginations.total = pagination.totalItemCount;
+    paginations.pageSize = pagination.pageSize;
+    paginations.currentPage = pagination.pageNumber;
     dataList.value = data;
     setTimeout(() => {
       loading.value = false;
     }, 500);
   }
-
-  const resetForm = formEl => {
-    if (!formEl) return;
-    formEl.resetFields();
-    onSearch();
-  };
+  /** 设置可见或不可见 */
+  async function setVisibleOrInvisible(id: number, visible: boolean) {
+    if (visible) {
+      await setVisible(id);
+      message(`设置可见成功`, { type: "success" });
+      onSearch();
+    } else {
+      await setInvisible(id);
+      message(`设置不可见成功`, { type: "success" });
+      onSearch();
+    }
+  }
 
   onMounted(() => {
     onSearch();
   });
 
   return {
-    form,
     loading,
     columns,
     dataList,
-    pagination,
-    selectedNum,
+    paginations,
     onSearch,
     onSetFeatured,
+    onCancelFeatured,
     onDeleted,
-    resetForm,
+    setVisibleOrInvisible,
     handleSizeChange,
-    handleCurrentChange,
-    handleSelectionChange
+    handleCurrentChange
   };
 }
