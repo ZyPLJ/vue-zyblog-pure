@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { useRole } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
-import View from "@iconify-icons/ep/view";
-import Delete from "@iconify-icons/ep/delete";
-import Refresh from "@iconify-icons/ep/refresh";
 import Eye from "@iconify-icons/ant-design/eye-invisible";
 import EyeOne from "@iconify-icons/ant-design/eye-twotone";
 

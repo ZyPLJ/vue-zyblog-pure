@@ -52,6 +52,18 @@ import "tippy.js/themes/light.css";
 import VueTippy from "vue-tippy";
 app.use(VueTippy);
 
+// 全局注册v-md-editor
+import VueMarkdownEditor from "@kangc/v-md-editor";
+import "@kangc/v-md-editor/lib/style/base-editor.css";
+import vuepressTheme from "@kangc/v-md-editor/lib/theme/vuepress.js";
+import "@kangc/v-md-editor/lib/theme/style/vuepress.css";
+import Prism from "prismjs";
+
+VueMarkdownEditor.use(vuepressTheme, {
+  Prism
+});
+app.use(VueMarkdownEditor);
+
 getPlatformConfig(app).then(async config => {
   setupStore(app);
   app.use(router);

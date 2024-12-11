@@ -20,6 +20,14 @@ export default {
       meta: {
         title: "文章分类"
       }
+    },
+    {
+      path: "/blog/post/editPost/:id",
+      name: "edit",
+      component: () => import("@/views/blog/post/editPost.vue"),
+      meta: {
+        showLink: false
+      }
     }
   ]
 };
