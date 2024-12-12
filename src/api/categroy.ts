@@ -19,6 +19,10 @@ export type CategoryPageResult = {
   statusCode: number;
   data?: Array<any>;
 };
+
+export const getAll = () => {
+  return http.request<CategoryResult>("get", baseUrlApi("Category/All"));
+};
 export const getCategoryList = (params?: object) => {
   return http.request<CategoryPageResult>(
     "get",

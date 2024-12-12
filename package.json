@@ -57,6 +57,8 @@
     "@vueuse/motion": "^2.2.3",
     "animate.css": "^4.1.1",
     "axios": "^1.7.4",
+    "codemirror": "^5",
+    "codemirror-editor-vue3": "^2.8.0",
     "dayjs": "^1.11.12",
     "echarts": "^5.5.1",
     "element-plus": "^2.8.0",

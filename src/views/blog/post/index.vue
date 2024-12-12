@@ -4,8 +4,7 @@ import { useRole } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
-import View from "@iconify-icons/ep/view";
-import Delete from "@iconify-icons/ep/delete";
+import PlusOutlined from "@iconify-icons/ant-design/plus-outlined";
 import Refresh from "@iconify-icons/ep/refresh";
 
 defineOptions({
@@ -13,7 +12,6 @@ defineOptions({
 });
 
 const formRef = ref();
-const tableRef = ref();
 
 const {
   form,
@@ -21,15 +19,14 @@ const {
   columns,
   dataList,
   paginations,
-  selectedNum,
   onSearch,
   handleDelete,
   resetForm,
   toEdit,
   handleSizeChange,
   handleCurrentChange,
-  handleSelectionChange
-} = useRole(tableRef);
+  onItemDropdownClick
+} = useRole();
 </script>
 
 <template>
@@ -64,6 +61,15 @@ const {
     </el-form>
 
     <PureTableBar title="文章列表" :columns="columns" @refresh="onSearch">
+      <template #buttons>
+        <el-button
+          type="success"
+          :icon="useRenderIcon(PlusOutlined)"
+          @click="toEdit({ id: '0' })"
+        >
+          新增文章
+        </el-button>
+      </template>
       <template v-slot="{ size, dynamicColumns }">
         <pure-table
           ref="tableRef"
@@ -81,12 +87,11 @@ const {
             background: 'var(--el-fill-color-light)',
             color: 'var(--el-text-color-primary)'
           }"
-          @selection-change="handleSelectionChange"
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
         >
           <template #operation="{ row }">
-            <el-button type="primary" @click="toEdit({ id: row.id })">
+            <el-button type="info" @click="toEdit({ id: row.id })">
               编辑
             </el-button>
             <el-popconfirm
@@ -97,13 +102,21 @@ const {
                 <el-button type="danger">删除</el-button>
               </template>
             </el-popconfirm>
-            <el-dropdown placement="bottom-start" style="margin-left: 12px">
+            <el-dropdown
+              placement="bottom-start"
+              style="margin-left: 12px"
+              @command="cmd => onItemDropdownClick(row, cmd)"
+            >
               <el-button type="primary">更多</el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item>设置推荐</el-dropdown-item>
-                  <el-dropdown-item>取消推荐</el-dropdown-item>
-                  <el-dropdown-item>设置置顶</el-dropdown-item>
+                  <el-dropdown-item command="setFeatured"
+                    >设置推荐</el-dropdown-item
+                  >
+                  <el-dropdown-item command="cancelFeatured"
+                    >取消推荐</el-dropdown-item
+                  >
+                  <el-dropdown-item command="setTop">设置置顶</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>

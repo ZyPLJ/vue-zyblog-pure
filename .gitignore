@@ -21,3 +21,4 @@ tests/**/coverage/
 *.sln
 tsconfig.tsbuildinfo
 /hs_err_pid28896.log
+/hs_err_pid*

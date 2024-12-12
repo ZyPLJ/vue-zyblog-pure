@@ -1,23 +1,30 @@
 import type { PaginationProps } from "@pureadmin/table";
-import { type Ref, reactive, ref, onMounted } from "vue";
-import { getPostList, deletePost } from "@/api/post";
+import { reactive, ref, onMounted } from "vue";
+import {
+  getPostList,
+  deletePost,
+  setFeatured,
+  cancelFeatured,
+  setTop
+} from "@/api/post";
 import formatTime from "@/utils/dateTime";
 import { message } from "@/utils/message";
 import { isString } from "@pureadmin/utils";
 import {
   useRouter,
+  useRoute,
   type LocationQueryRaw,
   type RouteParamsRaw
 } from "vue-router";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
+import { isEmpty } from "@pureadmin/utils";
 
-export function useRole(tableRef: Ref) {
+export function useRole() {
   const form = reactive({
     title: ""
   });
   const dataList = ref([]);
   const loading = ref(true);
-  const selectedNum = ref(0);
   const format = "yyyy-MM-dd HH:mm:ss";
 
   const paginations = reactive<PaginationProps>({
@@ -26,7 +33,9 @@ export function useRole(tableRef: Ref) {
     currentPage: 1,
     background: true
   });
+  const route = useRoute();
   const router = useRouter();
+  const getParameter = isEmpty(route.params) ? route.query : route.params;
 
   const columns: TableColumnList = [
     {
@@ -92,20 +101,14 @@ export function useRole(tableRef: Ref) {
   ];
 
   function handleSizeChange(val: number) {
-    console.log(`${val} items per page`);
+    paginations.pageSize = val;
+    onSearch();
   }
 
   function handleCurrentChange(val: number) {
-    console.log(`current page: ${val}`);
+    paginations.currentPage = val;
+    onSearch();
   }
-
-  /** 当CheckBox选择项发生变化时会触发该事件 */
-  function handleSelectionChange(val) {
-    selectedNum.value = val.length;
-    // 重置表格高度
-    tableRef.value.setAdaptive();
-  }
-
   async function onSearch() {
     loading.value = true;
     let req = {
@@ -149,21 +152,50 @@ export function useRole(tableRef: Ref) {
         parameter[param] = parameter[param].toString();
       }
     });
+    let id = parameter.id;
     // 跳转到编辑页面
     useMultiTagsStoreHook().handleTags("push", {
       path: `/blog/post/editPost/:id`,
       name: "edit",
       params: parameter,
       meta: {
-        title: `${parameter.id} - 编辑`
+        title: id === "0" ? "新增文章" : `${parameter.id} - 编辑`
       }
     });
     router.push({ name: "edit", params: parameter });
   }
+  // 用于页面刷新，重新获取浏览器地址栏参数并保存到标签页
+  const initToDetail = () => {
+    if (getParameter) toEdit(getParameter);
+  };
   const resetForm = formEl => {
     if (!formEl) return;
     formEl.resetFields();
     onSearch();
+  };
+  //下拉框点击
+  const onItemDropdownClick = (post: any, command: string) => {
+    switch (command) {
+      case "setFeatured":
+        setFeatured(post.id)
+          .then(res =>
+            message(`设置推荐成功${res.message}`, { type: "success" })
+          )
+          .catch(res => message(res.message, { type: "error" }));
+        break;
+      case "cancelFeatured":
+        cancelFeatured(post.id)
+          .then(res =>
+            message(`取消推荐成功${res.message}`, { type: "success" })
+          )
+          .catch(res => message(res.message, { type: "error" }));
+        break;
+      case "setTop":
+        setTop(post.id)
+          .then(res => message(`置顶成功${res.message}`, { type: "success" }))
+          .catch(res => message(res.message, { type: "error" }));
+        break;
+    }
   };
 
   onMounted(() => {
@@ -176,13 +208,14 @@ export function useRole(tableRef: Ref) {
     columns,
     dataList,
     paginations,
-    selectedNum,
     onSearch,
     handleDelete,
     toEdit,
+    initToDetail,
+    getParameter,
     resetForm,
     handleSizeChange,
     handleCurrentChange,
-    handleSelectionChange
+    onItemDropdownClick
   };
 }
