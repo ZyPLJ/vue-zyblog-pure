@@ -1,9 +1,11 @@
 import { onMounted, reactive, ref } from "vue";
 import type { PaginationProps } from "@pureadmin/table";
-import { getAll } from "@/api/featuredpost";
+import { getAll, deleteFeaturedPost, updateSort } from "@/api/featuredpost";
+import { ElMessageBox } from "element-plus";
+import { message } from "@/utils/message";
 
 export function useRole() {
-  const paginations = reactive<PaginationProps>({
+  const pagination = reactive<PaginationProps>({
     total: 0,
     pageSize: 10,
     currentPage: 1,
@@ -11,6 +13,7 @@ export function useRole() {
   });
   const loading = ref(true);
   const dataList = ref([]);
+  const Show = ref(false);
 
   const columns: TableColumnList = [
     {
@@ -40,8 +43,9 @@ export function useRole() {
       cellRenderer: ({ row }) => (
         <el-input-number
           v-model={row.sortOrder}
-          min="1"
-          max="999"
+          onChange={value => sortFeatured(row.id, value)}
+          min={1}
+          max={999}
           controls-position="right"
           size="large"
         />
@@ -60,12 +64,58 @@ export function useRole() {
     console.log("handleCurrentChange", val);
   }
   // 取消推荐
-  // async function cancelFeatured(row: any) {
-  //   console.log("cancelFeatured", row);
-  // }
+  async function cancelFeatured(id: number) {
+    ElMessageBox.confirm("你确定吗?", "Are you sure?", {
+      confirmButtonText: "OK",
+      cancelButtonText: "Cancel",
+      type: "warning"
+    })
+      .then(() => {
+        deleteFeaturedPost(id)
+          .then(res => {
+            message(res.message, { type: "success" });
+            onSearch();
+          })
+          .catch(err => {
+            message(err.message, { type: "error" });
+          });
+      })
+      .catch(e => {
+        if (e.response) {
+          message(e.response.data.message, { type: "error" });
+        } else {
+          message(e.message, { type: "error" });
+        }
+      });
+  }
+  // 排序
+  async function sortFeatured(id: number, sortOrder: number) {
+    Show.value = true;
+    try {
+      const res = await updateSort(id, sortOrder);
+      if (res.successful) {
+        message(res.message, { type: "success" });
+      } else {
+        message(res.message, { type: "error" });
+      }
+      await onSearch();
+    } catch (err) {
+      message(err.message, { type: "error" });
+    } finally {
+      Show.value = false;
+    }
+  }
   async function onSearch() {
     loading.value = true;
-    const { data } = await getAll();
+    let req = {
+      pageSize: pagination.pageSize,
+      page: pagination.currentPage,
+      search: ""
+    };
+    const { data, pagination: apiPagination } = await getAll(req);
+    pagination.total = apiPagination.totalItemCount;
+    pagination.pageSize = apiPagination.pageSize;
+    pagination.currentPage = apiPagination.pageNumber;
     dataList.value = data;
     setTimeout(() => {
       loading.value = false;
@@ -77,9 +127,11 @@ export function useRole() {
   });
 
   return {
-    paginations,
+    pagination,
     loading,
     onSearch,
+    cancelFeatured,
+    sortFeatured,
     columns,
     dataList,
     handleSizeChange,

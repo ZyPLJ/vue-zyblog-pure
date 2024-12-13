@@ -7,9 +7,10 @@ defineOptions({
 });
 
 const {
-  paginations,
+  pagination,
   loading,
   onSearch,
+  cancelFeatured,
   columns,
   dataList,
   handleSizeChange,
@@ -32,7 +33,7 @@ const {
           :adaptiveConfig="{ offsetBottom: 108 }"
           :data="dataList"
           :columns="dynamicColumns"
-          :pagination="{ ...paginations, size }"
+          :pagination="{ ...pagination, size }"
           :header-cell-style="{
             background: 'var(--el-fill-color-light)',
             color: 'var(--el-text-color-primary)'
@@ -40,8 +41,10 @@ const {
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
         >
-          <template>
-            <el-button type="warning" plain>取消推荐</el-button>
+          <template #operation="{ row }">
+            <el-button type="warning" plain @click="cancelFeatured(row.id)">
+              取消推荐
+            </el-button>
           </template>
         </pure-table>
       </template>
