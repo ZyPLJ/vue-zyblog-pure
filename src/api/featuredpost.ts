@@ -21,10 +21,13 @@ export type FeaturedPostResult = {
   data?: any;
 };
 
-export const getAll = () => {
+export const getAll = (params?: object) => {
   return http.request<FeaturedPostPageResult>(
     "get",
-    baseUrlApi("FeaturedPost")
+    baseUrlApi("FeaturedPost"),
+    {
+      params
+    }
   );
 };
 

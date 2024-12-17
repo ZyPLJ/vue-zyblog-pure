@@ -80,12 +80,8 @@ export function useRole() {
             message(err.message, { type: "error" });
           });
       })
-      .catch(e => {
-        if (e.response) {
-          message(e.response.data.message, { type: "error" });
-        } else {
-          message(e.message, { type: "error" });
-        }
+      .catch(() => {
+        message("已取消", { type: "info" });
       });
   }
   // 排序
