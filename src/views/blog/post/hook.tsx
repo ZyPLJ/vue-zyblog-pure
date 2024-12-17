@@ -71,6 +71,7 @@ export function useRole() {
       label: "创建时间",
       prop: "creationTime",
       minWidth: 100,
+      sortable: true,
       cellRenderer: ({ row }) => (
         <span>{formatTime(row.creationTime, format)}</span>
       )
@@ -79,6 +80,7 @@ export function useRole() {
       label: "上次更新",
       prop: "lastUpdateTime",
       minWidth: 100,
+      sortable: true,
       cellRenderer: ({ row }) => (
         <span>{formatTime(row.lastUpdateTime, format)}</span>
       )
@@ -91,7 +93,8 @@ export function useRole() {
     {
       label: "浏览量",
       prop: "viewCount",
-      minWidth: 100
+      minWidth: 100,
+      sortable: true
     },
     {
       label: "操作",
