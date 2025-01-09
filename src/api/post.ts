@@ -80,3 +80,31 @@ export const cancelFeatured = (id: string) => {
 export const setTop = (id: string) => {
   return http.request<PostResult>("post", baseUrlApi(`BlogPost/${id}/SetTop`));
 };
+
+export const upload = (
+  Categoryname: string,
+  parentId: string,
+  tags: string[],
+  publishTime: string,
+  file: any
+) => {
+  const formData = new FormData();
+  formData.append("Categoryname", Categoryname);
+  formData.append("Parent", parentId);
+  tags.forEach((tag: string) => {
+    formData.append("tags[]", tag);
+  });
+  formData.append("publishTime", publishTime);
+  formData.append("file", file);
+
+  return http.request<PostResult>(
+    "post",
+    baseUrlApi(`Blog/Upload`),
+    { data: formData },
+    {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }
+  );
+};

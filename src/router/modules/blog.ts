@@ -36,6 +36,14 @@ export default {
       meta: {
         showLink: false
       }
+    },
+    {
+      path: "/blog/post/upload",
+      name: "upload",
+      component: () => import("@/views/blog/upload/index.vue"),
+      meta: {
+        title: "打包上传"
+      }
     }
   ]
 };
