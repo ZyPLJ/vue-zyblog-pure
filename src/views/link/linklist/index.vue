@@ -3,70 +3,36 @@ import { ref } from "vue";
 import { useRole } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-
 import PlusOutlined from "@iconify-icons/ant-design/plus-outlined";
-import Refresh from "@iconify-icons/ep/refresh";
 
 defineOptions({
-  name: "tag"
+  name: "LinkList"
 });
 
-const formRef = ref();
-
 const {
-  form,
   paginations,
   loading,
   columns,
   dataList,
   onSearch,
-  resetForm,
   handleSizeChange,
   handleCurrentChange,
-  handleDelete,
   handleAdd,
-  handleEdit
+  handleEdit,
+  handleDeleted
 } = useRole();
 </script>
 
 <template>
   <div class="main">
-    <el-form
-      ref="formRef"
-      :inline="true"
-      :model="form"
-      class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px] overflow-auto"
-    >
-      <el-form-item label="标签名称" prop="module">
-        <el-input
-          v-model="form.name"
-          placeholder="请输入标签名称"
-          clearable
-          class="!w-[170px]"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          :icon="useRenderIcon('ri:search-line')"
-          :loading="loading"
-          @click="onSearch"
-        >
-          搜索
-        </el-button>
-        <el-button :icon="useRenderIcon(Refresh)" @click="resetForm(formRef)">
-          重置
-        </el-button>
-      </el-form-item>
-    </el-form>
-    <PureTableBar title="标签列表" :columns="columns" @refresh="onSearch">
+    <PureTableBar title="友链列表" :columns="columns" @refresh="onSearch">
       <template #buttons>
         <el-button
           type="success"
           :icon="useRenderIcon(PlusOutlined)"
           @click="handleAdd"
         >
-          新增标签
+          添加
         </el-button>
       </template>
       <template v-slot="{ size, dynamicColumns }">
@@ -91,10 +57,7 @@ const {
         >
           <template #operation="{ row }">
             <el-button type="info" @click="handleEdit(row)">编辑</el-button>
-            <el-popconfirm
-              title="确定要删除吗？"
-              @confirm="handleDelete(row.id)"
-            >
+            <el-popconfirm title="确定要删除吗？" @confirm="handleDeleted(row)">
               <template #reference>
                 <el-button type="danger">删除</el-button>
               </template>
