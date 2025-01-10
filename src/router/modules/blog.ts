@@ -22,6 +22,14 @@ export default {
       }
     },
     {
+      path: "/blog/post/tag",
+      name: "tag",
+      component: () => import("@/views/blog/tag/index.vue"),
+      meta: {
+        title: "文章标签"
+      }
+    },
+    {
       path: "/blog/post/featured-post",
       name: "featured-post",
       component: () => import("@/views/blog/FeaturedPost/index.vue"),
