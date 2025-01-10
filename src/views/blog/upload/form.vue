@@ -1,31 +1,63 @@
 <script lang="ts" setup>
-import { reactive, ref } from "vue";
+import { ref } from "vue";
+import { getAll } from "@/api/categroy";
+import { upload } from "@/api/post";
+import { getAllTags } from "@/api/tag";
 import { message } from "@/utils/message";
-import { createFormData } from "@pureadmin/utils";
+import formatTime from "@/utils/dateTime";
+import { useRouter } from "vue-router";
 
 import UploadIcon from "@iconify-icons/ri/upload-2-line";
 
 const formRef = ref();
-const uploadRef = ref();
 const form = ref();
+const fileList = ref([]);
 const categories = ref([]);
 const Tag = ref([]);
 const currentCategoryId = ref(0);
+const router = useRouter();
 form.value = {
   Categoryname: null,
   Parent: null,
   file: null,
-  Tag: null,
+  Tag: [],
   publishTime: null
+};
+
+const loadCategories = async () => {
+  const res = await getAll();
+  categories.value = res.data;
+};
+
+const loadTags = async () => {
+  const res = await getAllTags();
+  Tag.value = res.data;
 };
 
 const submitForm = formEl => {
   if (!formEl) return;
   formEl.validate(valid => {
-    if (valid) {
-    } else {
-      return false;
-    }
+    if (!valid) return false;
+    const format = "yyyy-MM-dd HH:mm:ss";
+    form.value.publishTime = formatTime(form.value.publishTime, format);
+    upload(
+      form.value.Categoryname,
+      form.value.Parent,
+      form.value.Tag,
+      form.value.publishTime,
+      form.value.file.raw
+    )
+      .then(res => {
+        if (res.successful) {
+          message("上传文章成功", { type: "success" });
+          router.push({ name: "post" });
+        } else {
+          message("上传文章失败", { type: "error" });
+        }
+      })
+      .catch(error => {
+        message("上传过程中发生错误", { type: "error" });
+      });
   });
 };
 
@@ -50,23 +82,42 @@ const handleCategoryChangeParent = (selectedCategoryName: string) => {
 const handleTag = (selectedTagName: string) => {
   form.value.Tag = selectedTagName;
 };
+
+const onUploadChange = (file: any, list: any) => {
+  const isIMAGE = file.raw.type === "application/x-zip-compressed";
+  if (!isIMAGE) {
+    message("只能上传zip压缩包!");
+    fileList.value = [];
+    return false;
+  }
+  // 只保留最新上传的文件
+  if (list.length > 0) {
+    fileList.value = [file]; // 保留当前有效文件
+  }
+
+  form.value.file = file;
+};
+
+loadCategories();
+loadTags();
 </script>
 
 <template>
   <el-form ref="formRef" :model="form" label-width="82px">
     <el-form-item
       label="附件"
-      prop="fileList"
+      prop="file"
       :rules="[{ required: true, message: '附件不能为空' }]"
     >
       <el-upload
         ref="uploadRef"
-        v-model:file-list="form.fileList"
+        v-model:file-list="fileList"
         drag
-        multiple
-        action="#"
+        action=""
         class="!w-[200px]"
         :auto-upload="false"
+        accept="application/x-zip-compressed,.zip"
+        :on-change="onUploadChange"
       >
         <div class="el-upload__text">
           <IconifyIconOffline
@@ -79,20 +130,8 @@ const handleTag = (selectedTagName: string) => {
       </el-upload>
     </el-form-item>
     <el-form-item
-      label="定时发布"
-      :rules="[{ required: true, message: '日期不能为空' }]"
-    >
-      <el-date-picker
-        v-model="form.publishTime"
-        type="datetime"
-        class="!w-[200px]"
-        placeholder="请选择日期时间"
-        value-format="YYYY-MM-DD HH:mm:ss"
-      />
-    </el-form-item>
-    <el-form-item
       label="文章分类"
-      prop="categoryId"
+      prop="Categoryname"
       :rules="[{ required: true, message: '分类不能为空' }]"
     >
       <el-select
@@ -149,6 +188,15 @@ const handleTag = (selectedTagName: string) => {
           :value="item.name"
         />
       </el-select>
+    </el-form-item>
+    <el-form-item label="定时发布">
+      <el-date-picker
+        v-model="form.publishTime"
+        type="datetime"
+        class="!w-[200px]"
+        placeholder="请选择日期时间"
+        value-format="YYYY-MM-DD HH:mm:ss"
+      />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" text bg @click="submitForm(formRef)">
