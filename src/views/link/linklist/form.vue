@@ -29,7 +29,7 @@ function getRef() {
 defineExpose({ getRef });
 </script>
 <template>
-  <el-form ref="ruleFormRef" :model="newFormInline">
+  <el-form ref="ruleFormRef" :model="newFormInline" label-width="auto">
     <el-form-item
       label="网站名称"
       prop="Name"
@@ -63,14 +63,14 @@ defineExpose({ getRef });
         placeholder="请输入标网站图标地址"
       />
     </el-form-item>
-    <el-form-item label="网站描述" style="margin-left: 10px">
+    <el-form-item label="网站描述">
       <el-input
         v-model="newFormInline.Description"
         class="!w-[220px]"
         placeholder="请输入标网站描述"
       />
     </el-form-item>
-    <el-form-item label="是否显示" style="margin-left: 10px">
+    <el-form-item label="是否显示">
       <el-switch v-model="newFormInline.visible" />
     </el-form-item>
   </el-form>
