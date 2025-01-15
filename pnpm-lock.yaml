@@ -264,6 +264,9 @@ importers:
       vue-tsc:
         specifier: ^2.0.29
         version: 2.0.29(typescript@5.5.4)
+      vue-waterfall-plugin-next:
+        specifier: ^2.6.5
+        version: 2.6.5
 
 packages:
 
@@ -4735,6 +4738,9 @@ packages:
     peerDependenciesMeta:
       vue:
         optional: true
+
+  vue-waterfall-plugin-next@2.6.5:
+    resolution: {integrity: sha512-8ACGbdjoyKLiJfnKXB8h8f9eE14lhyzfI1N1nrfVAIRczSpNY1KRwGOnVXN5OHqheLl3V1C0uVVRPtjTJkHkhw==}
 
   vue@3.4.38:
     resolution: {integrity: sha512-f0ZgN+mZ5KFgVv9wz0f4OgVKukoXtS3nwET4c2vLBGQR50aI8G0cqbFtLlX9Yiyg3LFGBitruPHt2PxwTduJEw==}
@@ -9672,6 +9678,8 @@ snapshots:
       is-plain-object: 5.0.0
     optionalDependencies:
       vue: 3.4.38(typescript@5.5.4)
+
+  vue-waterfall-plugin-next@2.6.5: {}
 
   vue@3.4.38(typescript@5.5.4):
     dependencies:

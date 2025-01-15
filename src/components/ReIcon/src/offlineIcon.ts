@@ -7,10 +7,12 @@ import Lollipop from "@iconify-icons/ep/lollipop";
 import HomeFilled from "@iconify-icons/ep/home-filled";
 import Menu from "@iconify-icons/ep/menu";
 import Link from "@iconify-icons/ep/link";
+import CameraFilled from "@iconify-icons/ep/camera-filled";
 addIcon("ep:lollipop", Lollipop);
 addIcon("ep:home-filled", HomeFilled);
 addIcon("ep:menu", Menu);
 addIcon("ep:link", Link);
+addIcon("ep:camera-filled", CameraFilled);
 // @iconify-icons/ri
 import Search from "@iconify-icons/ri/search-line";
 import InformationLine from "@iconify-icons/ri/information-line";
