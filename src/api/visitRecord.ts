@@ -18,6 +18,24 @@ export type VisitChartResult = {
   successful: boolean;
   data: VisitChart[];
 };
+export type VisitRecordPageResult = {
+  pagination: {
+    pageCount: number;
+    totalItemCount: number;
+    pageNumber: number;
+    pageSize: number;
+  };
+  successful: boolean;
+  message: string;
+  statusCode: number;
+  data?: Array<any>;
+};
+
+export const getList = (params?: object) => {
+  return http.request<VisitRecordPageResult>("get", baseUrlApi("VisitRecord"), {
+    params
+  });
+};
 
 export const getOverview = (params?: object) => {
   return http.request<OverviewResult>(

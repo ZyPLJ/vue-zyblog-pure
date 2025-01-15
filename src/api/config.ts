@@ -10,3 +10,11 @@ export type ConfigResult = {
 export const getAll = () => {
   return http.request<ConfigResult>("get", baseUrlApi("Config"));
 };
+
+export const isShow = (id: number) => {
+  return http.request<ConfigResult>("get", baseUrlApi(`Config/${id}`));
+};
+
+export const deleteConfig = (id: number) => {
+  return http.request<ConfigResult>("delete", baseUrlApi(`Config/${id}`));
+};

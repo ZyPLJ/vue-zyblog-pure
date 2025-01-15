@@ -16,5 +16,7 @@ addIcon("ep:camera-filled", CameraFilled);
 // @iconify-icons/ri
 import Search from "@iconify-icons/ri/search-line";
 import InformationLine from "@iconify-icons/ri/information-line";
+import Settings5Fill from "@iconify-icons/ri/settings-5-fill";
 addIcon("ri:search-line", Search);
 addIcon("ri:information-line", InformationLine);
+addIcon("ri:settings-5-fill", Settings5Fill);
