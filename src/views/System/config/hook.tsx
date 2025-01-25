@@ -1,6 +1,9 @@
 import { ref, onMounted } from "vue";
-import { getAll, isShow, deleteConfig } from "@/api/config";
+import { getAll, isShow, deleteConfig, addConfig } from "@/api/config";
 import { message } from "@/utils/message";
+import forms, { type FormProps } from "@/views/System/config/form.vue";
+import { addDialog } from "@/components/ReDialog/index";
+
 export function useRole() {
   const dataList = ref([]);
   const loading = ref(true);
@@ -78,6 +81,33 @@ export function useRole() {
     }, 500);
   }
 
+  /** 添加 */
+  function handleAdd() {
+    addDialog({
+      width: "30%",
+      title: "添加配置",
+      contentRenderer: () => forms,
+      props: {
+        // 赋默认值
+        formConfig: {
+          key: "",
+          value: "",
+          description: "",
+          isShowComment: false
+        }
+      },
+      closeCallBack: ({ options, args }) => {
+        const { formConfig } = options.props as FormProps;
+        if (args?.command === "sure") {
+          addConfig(formConfig).then(res => {
+            message(res.message, { type: "success" });
+            onSearch();
+          });
+        }
+      }
+    });
+  }
+
   onMounted(() => {
     onSearch();
   });
@@ -88,6 +118,7 @@ export function useRole() {
     dataList,
     onSearch,
     handleEdit,
-    handleDeleted
+    handleDeleted,
+    handleAdd
   };
 }

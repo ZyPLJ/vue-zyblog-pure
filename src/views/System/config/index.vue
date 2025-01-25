@@ -1,18 +1,36 @@
 <script setup lang="ts">
 import { useRole } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import PlusOutlined from "@iconify-icons/ant-design/plus-outlined";
 
 defineOptions({
   name: "config"
 });
 
-const { loading, columns, dataList, onSearch, handleEdit, handleDeleted } =
-  useRole();
+const {
+  loading,
+  columns,
+  dataList,
+  onSearch,
+  handleEdit,
+  handleDeleted,
+  handleAdd
+} = useRole();
 </script>
 
 <template>
   <div class="main">
     <PureTableBar title="配置管理" :columns="columns" @refresh="onSearch">
+      <template #buttons>
+        <el-button
+          type="success"
+          :icon="useRenderIcon(PlusOutlined)"
+          @click="handleAdd"
+        >
+          添加
+        </el-button>
+      </template>
       <template v-slot="{ size, dynamicColumns }">
         <pure-table
           ref="tableRef"
