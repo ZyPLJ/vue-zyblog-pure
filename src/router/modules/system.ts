@@ -21,6 +21,14 @@ export default {
       meta: {
         title: "配置管理"
       }
+    },
+    {
+      path: "/System/Comment/index",
+      name: "Comment",
+      component: () => import("@/views/System/Comment/index.vue"),
+      meta: {
+        title: "评论管理"
+      }
     }
   ]
 };
