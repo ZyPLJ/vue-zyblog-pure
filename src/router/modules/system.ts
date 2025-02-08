@@ -29,6 +29,14 @@ export default {
       meta: {
         title: "评论管理"
       }
+    },
+    {
+      path: "/System/Notice/index",
+      name: "Notice",
+      component: () => import("@/views/System/Notice/index.vue"),
+      meta: {
+        title: "公告管理"
+      }
     }
   ]
 };
