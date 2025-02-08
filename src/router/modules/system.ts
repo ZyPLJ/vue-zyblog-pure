@@ -31,6 +31,14 @@ export default {
       }
     },
     {
+      path: "/System/Message/index",
+      name: "Message",
+      component: () => import("@/views/System/Message/index.vue"),
+      meta: {
+        title: "留言管理"
+      }
+    },
+    {
       path: "/System/Notice/index",
       name: "Notice",
       component: () => import("@/views/System/Notice/index.vue"),
