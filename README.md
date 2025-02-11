@@ -1,51 +1,73 @@
-<h1>vue-pure-admin精简版（非国际化版本）</h1>
+<h1>vue-zyblog-pure 基于vue-pure-admin框架的博客后台系统</h1>
 
 [![license](https://img.shields.io/github/license/pure-admin/vue-pure-admin.svg)](LICENSE)
 
-**中文** | [English](./README.en-US.md)
-
 ## 介绍
 
-精简版是基于 [vue-pure-admin](https://github.com/pure-admin/vue-pure-admin) 提炼出的架子，包含主体功能，更适合实际项目开发，打包后的大小在全局引入 [element-plus](https://element-plus.org) 的情况下仍然低于 `2.3MB`，并且会永久同步完整版的代码。开启 `brotli` 压缩和 `cdn` 替换本地库模式后，打包大小低于 `350kb`
+本项目基于 [vue-pure-admin](https://github.com/pure-admin/vue-pure-admin) 开发，原本博客后台使用[StarBlog](https://github.com/Deali-Axy/StarBlog)升级vue3版本搭建，鉴于被我改得烂七八糟，所以这次使用了新的架子搭建。
 
-## 版本选择
+## 配套后端项目地址
 
-当前是非国际化版本，如果您需要国际化版本 [请点击](https://github.com/pure-admin/pure-admin-thin/tree/i18n)
+更新之后后台地址：[ZyPLJ/ZYBlog: 这是Personalblog的新版本库，我将持续更新它。](https://github.com/ZyPLJ/ZYBlog)
 
-## `js` 版本
+老版本地址：[ZyPLJ/personalblog: 可以上传md文件的.net6个人博客系统。](https://github.com/ZyPLJ/personalblog)
 
-[点我查看 js 版本](https://pure-admin.github.io/pure-admin-doc/pages/js/)
+老版本项目不再维护
 
-## `max` 版本
+## 部分截图
 
-[点我查看 max 版本](https://github.com/pure-admin/vue-pure-admin-max)
+![](./image/微信截图_20250211221310.png)
 
-## 配套视频
+![微信截图_20250211221357](./image/微信截图_20250211221357.png)
 
-[点我查看 UI 设计](https://www.bilibili.com/video/BV17g411T7rq)  
-[点我查看快速开发教程](https://www.bilibili.com/video/BV1kg411v7QT)
+![微信截图_20250211221406](./image/微信截图_20250211221406.png)
+
+![微信截图_20250211221415](./image/微信截图_20250211221415.png)
+
+![微信截图_20250211221445](./image/微信截图_20250211221445.png)
+
+![微信截图_20250211221517](./image/微信截图_20250211221517.png)
+
+## 开发环境
+
+[快速开始 | Pure Admin 保姆级文档](https://pure-admin.cn/pages/start/#开发环境) https://pure-admin.cn/pages/start/#开发环境
+
+## 下载依赖
+
+```
+pnpm install
+```
+
+## 运行
+
+```
+pnpm dev
+```
+
+## 打包
+
+```
+pnpm build
+```
+
+## Docker部署
+
+```dockerfile
+docker build -t 容器名 .
+
+docker run -d -p 8031:8031 --name 容器名 -v 服务器项目路径/dist:/usr/share/nginx/html 容器名
+```
 
 ## 配套保姆级文档
 
-[点我查看 vue-pure-admin 文档](https://pure-admin.github.io/pure-admin-doc)  
-[点我查看 @pureadmin/utils 文档](https://pure-admin-utils.netlify.app)
+vue-pure-admin提供了非常项目的开发和部署文档，可以根据自己的需求快速开发后台系统。
 
-## 优质服务、软件外包、赞助支持
-
-[点我查看详情](https://pure-admin.github.io/pure-admin-doc/pages/service/)
-
-## 预览
-
-[查看预览](https://pure-admin-thin.netlify.app/#/login)
-
-## 维护者
-
-[xiaoxian521](https://github.com/xiaoxian521)
-
-## ⚠️ 注意
-
-精简版不接受任何 `issues` 和 `pr`，如果有问题请到完整版 [issues](https://github.com/pure-admin/vue-pure-admin/issues/new/choose) 去提，谢谢！
+[点我查看 vue-pure-admin 文档](https://pure-admin.github.io/pure-admin-doc)
 
 ## 许可证
 
 [MIT © 2020-present, pure-admin](./LICENSE)
+
+## 遇到问题
+
+![](https://pljzy.top/images/5192045913af4a31a7988ed7077a1e0.jpg)
