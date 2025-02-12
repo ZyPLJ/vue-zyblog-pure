@@ -14,6 +14,12 @@
 
 老版本项目不再维护
 
+## Gitee
+
+前端：https://gitee.com/zyplj/vue-zyblog-pure
+
+后端：https://gitee.com/zyplj/zyblog
+
 ## 部分截图
 
 ![](./image/微信截图_20250211221310.png)
